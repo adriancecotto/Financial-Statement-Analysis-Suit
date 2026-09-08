@@ -1039,7 +1039,7 @@
         tbody.innerHTML = bHtml;
     }
 
-    // Dynamic Engine Calculation - Helper to calculate section sum dynamically
+    // Helper to calculate input items between boundaries
     function calculateSectionSum(struct, targetCalcId, pIdx) {
         let sum = 0;
         let lastSectionIndex = 0;
@@ -1313,7 +1313,6 @@
                 format: 'subtotal',
                 calcTotal: (p) => {
                     if (p === 0) {
-                        // First year / Single year assumption: prior Net Fixed Assets = 0
                         return getVal('ppe', p) + getVal('dep', p);
                     }
                     return (getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p);
@@ -1330,7 +1329,6 @@
                 calcTotal: (p) => {
                     const nwcCurr = getVal('tca', p) - getVal('tcl', p);
                     if (p === 0) {
-                        // First year assumption: prior NWC = 0, current NWC is change
                         return nwcCurr;
                     }
                     const nwcPrev = getVal('tca', p - 1) - getVal('tcl', p - 1);
@@ -1369,7 +1367,6 @@
                 format: 'subtotal',
                 calcTotal: (p) => {
                     if (p === 0) {
-                        // First year assumption: prior LTD = 0, current LTD is net new borrowing
                         return getVal('int', p) - getVal('ltd', p);
                     }
                     return getVal('int', p) - (getVal('ltd', p) - getVal('ltd', p - 1));
@@ -1386,7 +1383,6 @@
                 format: 'subtotal',
                 calcTotal: (p) => {
                     if (p === 0) {
-                        // First year assumption: prior Common Stock = 0, current stock is net equity raised
                         return getVal('div', p) - getVal('cap', p);
                     }
                     return getVal('div', p) - (getVal('cap', p) - getVal('cap', p - 1));
