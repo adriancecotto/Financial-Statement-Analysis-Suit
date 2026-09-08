@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Statements Analysis | Professor Adrián R. Cecotto</title>
+    <style>
+        :root {
+            --navy: #001f3f;
+            --light-gray: #f8f9fa;
+            --border: #dee2e6;
+            --accent: #007bff;
+            --error: #d9534f;
+            --success: #28a745;
+            --subtotal-bg: #eef2f7;
+            --section-head-bg: #eceff1;
+        }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+        }
+
+        .container {
+            max-width: 1350px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Header Styling */
+        .header-banner {
+            background-color: var(--navy);
+            color: white;
+            padding: 22px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-banner h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .header-banner h2 {
+            margin: 5px 0 2px 0;
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .header-banner h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: #d0e1fd;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background-color: #e9ecef;
+            border-bottom: 2px solid var(--navy);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 14px 8px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button:hover {
+            background-color: #dee2e6;
+        }
+
+        .tab-button.active {
+            background-color: var(--navy);
+            color: white;
+        }
+
+        /* Tab Content Panel */
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--navy);
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #003366;
+        }
+
+        .btn-reset {
+            background-color: #dc3545;
+        }
+
+        .btn-reset:hover {
+            background-color: #bd2130;
+        }
+
+        .btn-print {
+            background-color: #28a745;
+        }
+
+        .btn-print:hover {
+            background-color: #218838;
+        }
+
+        /* Table Wrapper for Horizontal Scroll */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            margin-bottom: 15px;
+        }
+
+        /* Table Styling */
+        table.fin-table {
+            border-collapse: collapse;
+            font-size: 0.93rem;
+            table-layout: fixed;
+            width: auto;
+            min-width: 100%;
+        }
+
+        table.fin-table th {
+            background-color: var(--light-gray);
+            padding: 10px 6px;
+            border: 1px solid var(--border);
+            border-bottom: 2px solid var(--navy);
+            text-align: center;
+            white-space: nowrap;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        table.fin-table th.left-align {
+            text-align: left;
+            width: 320px;
+            min-width: 320px;
+            max-width: 320px;
+        }
+
+        table.fin-table td {
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            vertical-align: middle;
+            word-wrap: break-word;
+            box-sizing: border-box;
+        }
+
+        .col-account {
+            width: 320px;
+            min-width: 320px;
+            max-width: 320px;
+            text-align: left;
+        }
+
+        .col-amount {
+            width: 140px;
+            min-width: 140px;
+            max-width: 140px;
+        }
+
+        .col-vert {
+            width: 90px;
+            min-width: 90px;
+            max-width: 90px;
+        }
+
+        .col-horiz {
+            width: 100px;
+            min-width: 100px;
+            max-width: 100px;
+        }
+
+        .row-label-cell {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .row-label-text {
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: #888;
+            margin-right: 8px;
+            font-size: 1.1rem;
+            user-select: none;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        tr.draggable-row.dragging {
+            opacity: 0.4;
+            background-color: #e2eafc;
+        }
+
+        tr.drag-over {
+            border-top: 3px solid var(--accent) !important;
+        }
+
+        .account-input, .period-header-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .period-header-input {
+            text-align: center;
+            font-weight: bold;
+            background-color: transparent;
+            border: 1px dashed var(--navy);
+        }
+
+        .currency-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: right;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .currency-input:focus, .account-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 5px rgba(0,123,255,0.25);
+        }
+
+        .calc-value {
+            display: block;
+            text-align: right;
+            font-weight: bold;
+            padding-right: 5px;
+        }
+
+        .perc-value {
+            text-align: center;
+            font-weight: 600;
+            color: #555;
+            display: block;
+        }
+
+        .section-head {
+            background-color: var(--section-head-bg);
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--navy);
+            text-align: left;
+        }
+
+        .subtotal-row {
+            background-color: var(--subtotal-bg);
+            font-weight: bold;
+            color: var(--navy);
+        }
+
+        .total-row {
+            background-color: var(--navy);
+            color: white;
+            font-weight: bold;
+        }
+
+        .total-row .calc-value, .total-row .perc-value {
+            color: white;
+        }
+
+        .btn-remove-row {
+            background: none;
+            border: none;
+            color: #d9534f;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0 5px;
+        }
+
+        .btn-remove-row:hover {
+            color: #a71d2a;
+        }
+
+        .check-box {
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 15px;
+            background-color: #fafafa;
+        }
+
+        .formula-section {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 18px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .formula-section h3 {
+            margin-top: 0;
+            color: var(--navy);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 6px;
+            display: inline-block;
+        }
+
+        .formula-section ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 12px 0 0 0;
+        }
+
+        .formula-section li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+
+        .formula-section li:last-child {
+            border-bottom: none;
+        }
+
+        .footer {
+            padding: 20px;
+            font-size: 0.95em;
+            text-align: center;
+            color: #444;
+            background: var(--light-gray);
+            border-top: 1px solid var(--border);
+            line-height: 1.5;
+        }
+
+        .footer b {
+            color: var(--navy);
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                max-width: 100%;
+            }
+            .toolbar, .nav-tabs, .btn-remove-row, .drag-handle {
+                display: none !important;
+            }
+            .tab-content {
+                display: block !important;
+                padding: 10px 0;
+                page-break-after: always;
+            }
+            .table-wrapper {
+                border: none;
+                overflow: visible;
+            }
+            table.fin-table {
+                width: 100% !important;
+                table-layout: auto !important;
+            }
+            .currency-input, .account-input, .period-header-input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-banner">
+        <h1>Corporate Finance</h1>
+        <h2>Financial Statements Analysis</h2>
+        <h3>Professor Adrián R. Cecotto</h3>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-button active" onclick="openTab('is-tab', event)">Income Statement</button>
+        <button class="tab-button" onclick="openTab('bs-tab', event)">Balance Sheet</button>
+        <button class="tab-button" onclick="openTab('cf-tab', event)">Cash Flow Statement</button>
+        <button class="tab-button" onclick="openTab('ratios-tab', event)">Ratios</button>
+        <button class="tab-button" onclick="openTab('cf-calc-tab', event)">Cash Flows</button>
+        <button class="tab-button" onclick="openTab('formulas-tab', event)">Formulas</button>
+    </div>
+
+    <!-- ==================== INCOME STATEMENT ==================== -->
+    <div id="is-tab" class="tab-content active">
+        <div class="toolbar">
+            <button class="btn" onclick="addPeriod()">+ Add Period Column</button>
+            <button class="btn" onclick="removePeriod()">- Remove Period Column</button>
+            <button class="btn" onclick="addCustomRow('is')">+ Add Custom Row</button>
+            <button class="btn btn-reset" onclick="resetAllValues()">Reset System</button>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="fin-table" id="is-table">
+                <thead id="is-thead"></thead>
+                <tbody id="is-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==================== BALANCE SHEET ==================== -->
+    <div id="bs-tab" class="tab-content">
+        <div class="toolbar">
+            <button class="btn" onclick="addPeriod()">+ Add Period Column</button>
+            <button class="btn" onclick="removePeriod()">- Remove Period Column</button>
+            <button class="btn" onclick="addCustomRow('bs')">+ Add Custom Row</button>
+            <button class="btn btn-reset" onclick="resetAllValues()">Reset System</button>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="fin-table" id="bs-table">
+                <thead id="bs-thead"></thead>
+                <tbody id="bs-tbody"></tbody>
+            </table>
+        </div>
+        <div id="balance_check" class="check-box">
+            Balance Check: $0.00
+        </div>
+    </div>
+
+    <!-- ==================== CASH FLOW STATEMENT ==================== -->
+    <div id="cf-tab" class="tab-content">
+        <div class="toolbar">
+            <button class="btn" onclick="addPeriod()">+ Add Period Column</button>
+            <button class="btn" onclick="removePeriod()">- Remove Period Column</button>
+            <button class="btn" onclick="addCustomRow('cf')">+ Add Custom Row</button>
+            <button class="btn btn-reset" onclick="resetAllValues()">Reset System</button>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="fin-table" id="cf-table">
+                <thead id="cf-thead"></thead>
+                <tbody id="cf-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==================== RATIOS TAB ==================== -->
+    <div id="ratios-tab" class="tab-content">
+        <div class="toolbar">
+            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Comparative Financial Ratio Analysis Across All Periods</span>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="fin-table" id="ratios-table">
+                <thead id="ratios-thead"></thead>
+                <tbody id="ratios-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==================== CASH FLOWS CALCULATIONS TAB ==================== -->
+    <div id="cf-calc-tab" class="tab-content">
+        <div class="toolbar">
+            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Corporate Finance Cash Flow Metrics (Free Cash Flow Identity)</span>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+        <div class="table-wrapper">
+            <table class="fin-table" id="cf-calc-table">
+                <thead id="cf-calc-thead"></thead>
+                <tbody id="cf-calc-tbody"></tbody>
+            </table>
+        </div>
+        <div id="cf_identity_check" class="check-box">
+            Cash Flow Identity Check: $0.00
+        </div>
+    </div>
+
+    <!-- ==================== FORMULAS REFERENCE TAB ==================== -->
+    <div id="formulas-tab" class="tab-content">
+        <div class="toolbar">
+            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Reference Manual for System Financial Formulas & Metrics</span>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+        </div>
+
+        <div class="formula-section">
+            <h3>1. Income Statement Formulas</h3>
+            <ul>
+                <li><strong>Gross Margin:</strong> Sales Revenues − Cost of Goods Sold (COGS)</li>
+                <li><strong>EBITDA:</strong> Gross Margin − Selling & Administrative Expenses (and other operating items)</li>
+                <li><strong>EBIT (Operating Income):</strong> EBITDA − Depreciation & Amortization</li>
+                <li><strong>EBT (Pre-tax Income):</strong> EBIT − Interest Expenses</li>
+                <li><strong>Net Income:</strong> EBT − Taxes</li>
+                <li><strong>Addition to Retained Earnings:</strong> Net Income − Dividends Paid</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>2. Balance Sheet Formulas</h3>
+            <ul>
+                <li><strong>Total Current Assets:</strong> Cash & Cash Equivalents + Accounts Receivable + Inventory</li>
+                <li><strong>Total Non-Current Assets:</strong> Property, Plant & Equipment (Net) + Intangible Assets</li>
+                <li><strong>TOTAL ASSETS:</strong> Total Current Assets + Total Non-Current Assets</li>
+                <li><strong>Total Current Liabilities:</strong> Accounts Payable + Notes Payable / Short-Term Debt</li>
+                <li><strong>Total Non-Current Liabilities:</strong> Long-Term Debt</li>
+                <li><strong>TOTAL LIABILITIES:</strong> Total Current Liabilities + Total Non-Current Liabilities</li>
+                <li><strong>TOTAL EQUITY:</strong> Share Capital / Common Stock + Retained Earnings</li>
+                <li><strong>TOTAL LIABILITIES & EQUITY:</strong> Total Liabilities + Total Equity</li>
+                <li><strong>Balance Sheet Identity:</strong> Total Assets ≡ Total Liabilities + Total Equity</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>3. Cash Flow Statement Formulas</h3>
+            <ul>
+                <li><strong>Net Cash from Operating Activities:</strong> Net Income + Depreciation & Amortization ± Changes in Working Capital</li>
+                <li><strong>Net Cash from Investing Activities:</strong> Capital Expenditures (CapEx) ± Other Investments</li>
+                <li><strong>Net Cash from Financing Activities:</strong> New Debt Issued / Repaid − Dividends Paid</li>
+                <li><strong>Net Change in Cash:</strong> Operating Cash Flow + Investing Cash Flow + Financing Cash Flow</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>4. Liquidity Ratios</h3>
+            <ul>
+                <li><strong>Current Ratio:</strong> Total Current Assets ÷ Total Current Liabilities</li>
+                <li><strong>Quick Ratio (Acid-Test):</strong> (Total Current Assets − Inventory) ÷ Total Current Liabilities</li>
+                <li><strong>Cash Ratio:</strong> Cash & Cash Equivalents ÷ Total Current Liabilities</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>5. Asset Turnover / Efficiency Ratios</h3>
+            <ul>
+                <li><strong>Total Asset Turnover:</strong> Sales Revenues ÷ Total Assets</li>
+                <li><strong>Inventory Turnover:</strong> Cost of Goods Sold (COGS) ÷ Inventory</li>
+                <li><strong>Receivables Turnover:</strong> Sales Revenues ÷ Accounts Receivable</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>6. Financial Leverage & Coverage Ratios</h3>
+            <ul>
+                <li><strong>Total Debt Ratio:</strong> Total Liabilities ÷ Total Assets</li>
+                <li><strong>Debt-to-Equity (D/E) Ratio:</strong> Total Liabilities ÷ Total Equity</li>
+                <li><strong>Equity Multiplier:</strong> Total Assets ÷ Total Equity</li>
+                <li><strong>Times Interest Earned (TIE):</strong> EBIT ÷ Interest Expenses</li>
+                <li><strong>Cash Coverage Ratio:</strong> EBITDA ÷ Interest Expenses</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>7. Profitability & Growth Ratios</h3>
+            <ul>
+                <li><strong>Profit Margin:</strong> Net Income ÷ Sales Revenues</li>
+                <li><strong>Return on Assets (ROA):</strong> Net Income ÷ Total Assets</li>
+                <li><strong>Return on Equity (ROE):</strong> Net Income ÷ Total Equity</li>
+                <li><strong>Retention Ratio (b):</strong> Addition to Retained Earnings ÷ Net Income</li>
+                <li><strong>Internal Growth Rate (IGR):</strong> (ROA × b) ÷ (1 − [ROA × b])</li>
+                <li><strong>Sustainable Growth Rate (SGR):</strong> (ROE × b) ÷ (1 − [ROE × b])</li>
+            </ul>
+        </div>
+
+        <div class="formula-section">
+            <h3>8. Corporate Finance Cash Flows (Free Cash Flow Identity)</h3>
+            <ul>
+                <li><strong>Operating Cash Flow (OCF):</strong> EBIT + Depreciation & Amortization − Taxes</li>
+                <li><strong>Capital Spending (Net CapEx):</strong> Ending Net Fixed Assets − Beginning Net Fixed Assets + Depreciation</li>
+                <li><strong>Change in Net Working Capital (NWC):</strong> Ending NWC − Beginning NWC</li>
+                <li><strong>Cash Flow From Assets (CFFA):</strong> OCF − Net CapEx − Change in NWC</li>
+                <li><strong>Cash Flow to Creditors:</strong> Interest Expenses − Net New Long-Term Borrowing</li>
+                <li><strong>Cash Flow to Stockholders:</strong> Dividends Paid − Net New Equity Raised</li>
+                <li><strong>Cash Flow Identity Verification:</strong> Cash Flow From Assets ≡ Cash Flow to Creditors + Cash Flow to Stockholders</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        Strategy & Financial Management Analysis<br>
+        <b>Professor Adrián R. Cecotto</b><br>
+        <span style="font-size: 0.85em; color: #666;">All metrics, comparative ratios, and cash flow calculations update automatically. Data is saved locally in browser.</span>
+    </div>
+</div>
+
+<script>
+    // LocalStorage Key Name
+    const STORAGE_KEY = 'financial_suite_data_v2';
+
+    // System Global Data Model
+    let periods = ['Year 1', 'Year 2'];
+
+    // Master Default Template Structures
+    function getDefaultISStructure() {
+        return [
+            { id: 'rev', label: 'Sales Revenues', type: 'input' },
+            { id: 'cogs', label: 'Cost of Goods Sold (COGS)', type: 'input' },
+            { id: 'gm', label: 'Gross Margin', type: 'calc', format: 'subtotal' },
+            { id: 'oe', label: 'Selling & Administrative Expenses', type: 'input' },
+            { id: 'ebitda', label: 'EBITDA', type: 'calc', format: 'subtotal' },
+            { id: 'dep', label: 'Depreciation & Amortization', type: 'input' },
+            { id: 'ebit', label: 'EBIT', type: 'calc', format: 'subtotal' },
+            { id: 'int', label: 'Interest Expenses', type: 'input' },
+            { id: 'ebt', label: 'EBT', type: 'calc', format: 'subtotal' },
+            { id: 'tax', label: 'Taxes', type: 'input' },
+            { id: 'ni', label: 'Net Income', type: 'calc', format: 'total' },
+            { id: 'div', label: 'Dividends Paid', type: 'input' },
+            { id: 're_add', label: 'Addition to Retained Earnings', type: 'calc', format: 'subtotal' }
+        ];
+    }
+
+    function getDefaultBSStructure() {
+        return [
+            { id: 'sec_assets', type: 'section_title', label: 'ASSETS' },
+            { id: 'cash', label: 'Cash & Cash Equivalents', type: 'input' },
+            { id: 'ar', label: 'Accounts Receivable', type: 'input' },
+            { id: 'inv', label: 'Inventory', type: 'input' },
+            { id: 'tca', label: 'Total Current Assets', type: 'calc', format: 'subtotal' },
+            { id: 'ppe', label: 'Property, Plant & Equipment (Net Fixed Assets)', type: 'input' },
+            { id: 'intan', label: 'Intangible & Other Non-Current Assets', type: 'input' },
+            { id: 'tnca', label: 'Total Non-Current Assets', type: 'calc', format: 'subtotal' },
+            { id: 'total_assets', label: 'TOTAL ASSETS', type: 'calc', format: 'total' },
+
+            { id: 'sec_liab', type: 'section_title', label: 'LIABILITIES' },
+            { id: 'ap', label: 'Accounts Payable', type: 'input' },
+            { id: 'std', label: 'Notes Payable / Short-Term Debt', type: 'input' },
+            { id: 'tcl', label: 'Total Current Liabilities', type: 'calc', format: 'subtotal' },
+            { id: 'ltd', label: 'Long-Term Debt', type: 'input' },
+            { id: 'tncl', label: 'Total Non-Current Liabilities', type: 'calc', format: 'subtotal' },
+            { id: 'total_liab', label: 'TOTAL LIABILITIES', type: 'calc', format: 'subtotal' },
+
+            { id: 'sec_eq', type: 'section_title', label: 'EQUITY' },
+            { id: 'cap', label: 'Share Capital / Common Stock', type: 'input' },
+            { id: 're', label: 'Retained Earnings', type: 'input' },
+            { id: 'total_equity', label: 'TOTAL EQUITY', type: 'calc', format: 'subtotal' },
+            { id: 'total_le', label: 'TOTAL LIABILITIES & EQUITY', type: 'calc', format: 'total' }
+        ];
+    }
+
+    function getDefaultCFStructure() {
+        return [
+            { id: 'sec_cf_op', type: 'section_title', label: 'OPERATING ACTIVITIES' },
+            { id: 'cf_ni', label: 'Net Income', type: 'input' },
+            { id: 'cf_dep', label: 'Depreciation & Amortization (+)', type: 'input' },
+            { id: 'cf_wc', label: 'Changes in Working Capital (+/-)', type: 'input' },
+            { id: 'nco', label: 'Net Cash from Operating Activities', type: 'calc', format: 'subtotal' },
+
+            { id: 'sec_cf_inv', type: 'section_title', label: 'INVESTING ACTIVITIES' },
+            { id: 'cf_capex', label: 'Capital Expenditures (CapEx) (-)', type: 'input' },
+            { id: 'cf_other_inv', label: 'Other Investments (+/-)', type: 'input' },
+            { id: 'nci', label: 'Net Cash from Investing Activities', type: 'calc', format: 'subtotal' },
+
+            { id: 'sec_cf_fin', type: 'section_title', label: 'FINANCING ACTIVITIES' },
+            { id: 'cf_debt', label: 'New Debt / Debt Repayment (+/-)', type: 'input' },
+            { id: 'cf_div', label: 'Dividends Paid (-)', type: 'input' },
+            { id: 'ncf', label: 'Net Cash from Financing Activities', type: 'calc', format: 'subtotal' },
+
+            { id: 'net_change_cash', label: 'NET CHANGE IN CASH', type: 'calc', format: 'total' }
+        ];
+    }
+
+    let isStructure = getDefaultISStructure();
+    let bsStructure = getDefaultBSStructure();
+    let cfStructure = getDefaultCFStructure();
+
+    // Store Numerical Data
+    let store = {};
+    let draggedIndex = null;
+    let activeDragType = null;
+
+    function initDataStore() {
+        store = {};
+        const allKeys = [
+            'rev', 'cogs', 'oe', 'dep', 'int', 'tax', 'div',
+            'cash', 'ar', 'inv', 'ppe', 'intan', 'ap', 'std', 'ltd', 'cap', 're',
+            'cf_ni', 'cf_dep', 'cf_wc', 'cf_capex', 'cf_other_inv', 'cf_debt', 'cf_div'
+        ];
+
+        allKeys.forEach(key => {
+            store[key] = new Array(periods.length).fill(0);
+        });
+    }
+
+    // --- LOCAL STORAGE PERSISTENCE ENGINE ---
+    function saveToLocalStorage() {
+        try {
+            const payload = {
+                periods: periods,
+                store: store,
+                isStructure: isStructure,
+                bsStructure: bsStructure,
+                cfStructure: cfStructure
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (e) {
+            console.error("Local Storage Error: Unable to save data.", e);
+        }
+    }
+
+    function loadFromLocalStorage() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed.periods) periods = parsed.periods;
+                if (parsed.store) store = parsed.store;
+                if (parsed.isStructure) isStructure = parsed.isStructure;
+                if (parsed.bsStructure) bsStructure = parsed.bsStructure;
+                if (parsed.cfStructure) cfStructure = parsed.cfStructure;
+                return true;
+            }
+        } catch (e) {
+            console.error("Local Storage Error: Unable to load stored data.", e);
+        }
+        return false;
+    }
+
+    function resetAllValues() {
+        if (confirm('Are you sure you want to completely clear all data, added rows, and additional periods?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            periods = ['Year 1', 'Year 2'];
+            isStructure = getDefaultISStructure();
+            bsStructure = getDefaultBSStructure();
+            cfStructure = getDefaultCFStructure();
+            initDataStore();
+            renderAll();
+        }
+    }
+
+    function openTab(tabId, evt) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if (evt && evt.currentTarget) {
+            evt.currentTarget.classList.add('active');
+        }
+
+        if (tabId === 'ratios-tab') renderRatiosTab();
+        if (tabId === 'cf-calc-tab') renderCFCalcTab();
+    }
+
+    function addPeriod() {
+        const pNum = periods.length + 1;
+        periods.push(`Year ${pNum}`);
+        for (let key in store) {
+            if (Array.isArray(store[key])) store[key].push(0);
+        }
+        renderAll();
+        saveToLocalStorage();
+    }
+
+    function removePeriod() {
+        if (periods.length <= 1) {
+            alert('At least one period must be present.');
+            return;
+        }
+        periods.pop();
+        for (let key in store) {
+            if (Array.isArray(store[key])) store[key].pop();
+        }
+        renderAll();
+        saveToLocalStorage();
+    }
+
+    function addCustomRow(statementType) {
+        const rowId = 'custom_' + Date.now();
+        const newRow = { id: rowId, label: 'Custom Line Item', type: 'input', isCustom: true };
+        store[rowId] = new Array(periods.length).fill(0);
+
+        if (statementType === 'is') {
+            const idx = isStructure.findIndex(item => item.id === 'ebitda');
+            isStructure.splice(idx, 0, newRow);
+        } else if (statementType === 'bs') {
+            const idx = bsStructure.findIndex(item => item.id === 'tca');
+            bsStructure.splice(idx, 0, newRow);
+        } else if (statementType === 'cf') {
+            const idx = cfStructure.findIndex(item => item.id === 'nco');
+            cfStructure.splice(idx, 0, newRow);
+        }
+        renderAll();
+        saveToLocalStorage();
+    }
+
+    function removeCustomRow(statementType, rowId) {
+        let struct = statementType === 'is' ? isStructure : (statementType === 'bs' ? bsStructure : cfStructure);
+        const idx = struct.findIndex(r => r.id === rowId);
+        if (idx !== -1) struct.splice(idx, 1);
+        delete store[rowId];
+        renderAll();
+        saveToLocalStorage();
+    }
+
+    function updatePeriodName(idx, name) {
+        periods[idx] = name;
+        if (document.getElementById('ratios-tab').classList.contains('active')) renderRatiosTab();
+        if (document.getElementById('cf-calc-tab').classList.contains('active')) renderCFCalcTab();
+        saveToLocalStorage();
+    }
+
+    function getVal(id, pIdx) {
+        if (store[id] && store[id][pIdx] !== undefined) {
+            return parseFloat(store[id][pIdx]) || 0;
+        }
+        return 0;
+    }
+
+    function setVal(id, pIdx, val) {
+        if (!store[id]) store[id] = new Array(periods.length).fill(0);
+        store[id][pIdx] = val === "" ? "" : (parseFloat(val) || 0);
+        recalculateAndRefresh();
+        saveToLocalStorage();
+    }
+
+    function updateCustomLabel(statementType, rowId, label) {
+        let struct = statementType === 'is' ? isStructure : (statementType === 'bs' ? bsStructure : cfStructure);
+        const row = struct.find(r => r.id === rowId);
+        if (row) row.label = label;
+        saveToLocalStorage();
+    }
+
+    // --- DRAG AND DROP HANDLERS ---
+    function handleDragStart(e, statementType, index) {
+        draggedIndex = index;
+        activeDragType = statementType;
+        e.currentTarget.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', index);
+    }
+
+    function handleDragOver(e) {
+        if (e.preventDefault) e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    }
+
+    function handleDragEnter(e) {
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e, statementType, targetIndex) {
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+        
+        e.currentTarget.classList.remove('drag-over');
+
+        if (activeDragType === statementType && draggedIndex !== null && draggedIndex !== targetIndex) {
+            let struct = statementType === 'is' ? isStructure : (statementType === 'bs' ? bsStructure : cfStructure);
+            const itemToMove = struct[draggedIndex];
+            struct.splice(draggedIndex, 1);
+            struct.splice(targetIndex, 0, itemToMove);
+            renderAll();
+            saveToLocalStorage();
+        }
+        return false;
+    }
+
+    function handleDragEnd(e) {
+        e.currentTarget.classList.remove('dragging');
+        document.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+        draggedIndex = null;
+        activeDragType = null;
+    }
+
+    // Main Render Pipeline
+    function renderAll() {
+        renderStatement('is');
+        renderStatement('bs');
+        renderStatement('cf');
+        recalculateAndRefresh();
+    }
+
+    function renderStatement(type) {
+        const thead = document.getElementById(`${type}-thead`);
+        const tbody = document.getElementById(`${type}-tbody`);
+        let struct = type === 'is' ? isStructure : (type === 'bs' ? bsStructure : cfStructure);
+
+        // Header Generation
+        let hHtml = `<tr><th class="left-align col-account">Account / Line Item</th>`;
+        periods.forEach((p, pIdx) => {
+            hHtml += `<th colspan="${periods.length > 1 ? 3 : 2}">
+                <input type="text" class="period-header-input" value="${p}" onchange="updatePeriodName(${pIdx}, this.value)">
+            </th>`;
+        });
+        hHtml += `</tr><tr><th class="left-align col-account">Description</th>`;
+        periods.forEach((p, pIdx) => {
+            hHtml += `<th class="col-amount">Amount ($)</th>`;
+            hHtml += `<th class="col-vert">${type === 'bs' ? '% Assets' : (type === 'is' ? '% Sales' : '% Inflow')}</th>`;
+            if (periods.length > 1) {
+                hHtml += `<th class="col-horiz">${pIdx === 0 ? 'Horiz. %' : 'Horiz. Change'}</th>`;
+            }
+        });
+        hHtml += `</tr>`;
+        thead.innerHTML = hHtml;
+
+        // Body Generation
+        let bHtml = '';
+        struct.forEach((item, idx) => {
+            if (item.type === 'section_title') {
+                bHtml += `<tr class="section-head"><td colspan="${1 + periods.length * (periods.length > 1 ? 3 : 2)}">${item.label}</td></tr>`;
+            } else {
+                const isCalc = item.type === 'calc';
+                const isCustom = !!item.isCustom;
+                const rowClass = item.format === 'total' ? 'total-row' : (item.format === 'subtotal' ? 'subtotal-row' : '');
+                
+                bHtml += `<tr class="${rowClass} draggable-row" 
+                            draggable="true" 
+                            ondragstart="handleDragStart(event, '${type}', ${idx})" 
+                            ondragover="handleDragOver(event)" 
+                            ondragenter="handleDragEnter(event)" 
+                            ondragleave="handleDragLeave(event)" 
+                            ondrop="handleDrop(event, '${type}', ${idx})" 
+                            ondragend="handleDragEnd(event)">
+                    <td class="col-account">
+                        <div class="row-label-cell">
+                            <span class="drag-handle" title="Drag to reorder">&#x2630;</span>
+                            ${isCustom ? `<input type="text" class="account-input" value="${item.label}" style="width:80%" onchange="updateCustomLabel('${type}', '${item.id}', this.value)">
+                                          <button class="btn-remove-row" onclick="removeCustomRow('${type}', '${item.id}')" title="Remove Row">×</button>` 
+                                       : `<span class="row-label-text">${item.label}</span>`}
+                        </div>
+                    </td>`;
+                
+                periods.forEach((p, pIdx) => {
+                    if (isCalc) {
+                        bHtml += `<td class="col-amount"><span class="calc-value" id="${item.id}_${pIdx}">0</span></td>`;
+                    } else {
+                        const val = store[item.id] && store[item.id][pIdx] !== undefined ? store[item.id][pIdx] : "";
+                        const valAttr = val === 0 ? 'placeholder="0"' : `value="${val}"`;
+                        bHtml += `<td class="col-amount"><input type="number" class="currency-input" id="${item.id}_${pIdx}" ${valAttr} oninput="setVal('${item.id}', ${pIdx}, this.value)"></td>`;
+                    }
+                    bHtml += `<td class="col-vert"><span class="perc-value" id="${item.id}_p_${pIdx}">-</span></td>`;
+                    if (periods.length > 1) bHtml += `<td class="col-horiz"><span class="perc-value" id="${item.id}_h_${pIdx}">-</span></td>`;
+                });
+                bHtml += `</tr>`;
+            }
+        });
+        tbody.innerHTML = bHtml;
+    }
+
+    // Dynamic Engine Calculation - Helper to calculate section sum dynamically
+    function calculateSectionSum(struct, targetCalcId, pIdx) {
+        let sum = 0;
+        let lastSectionIndex = 0;
+
+        const targetIdx = struct.findIndex(item => item.id === targetCalcId);
+        if (targetIdx === -1) return 0;
+
+        for (let i = targetIdx - 1; i >= 0; i--) {
+            if (struct[i].type === 'calc' || struct[i].type === 'section_title') {
+                lastSectionIndex = i + 1;
+                break;
+            }
+        }
+
+        for (let i = lastSectionIndex; i < targetIdx; i++) {
+            if (struct[i].type === 'input') {
+                sum += getVal(struct[i].id, pIdx);
+            }
+        }
+        return sum;
+    }
+
+    // Dynamic Engine Calculation
+    function recalculateAndRefresh() {
+        periods.forEach((_, pIdx) => {
+            // --- 1. INCOME STATEMENT ---
+            const rev = getVal('rev', pIdx);
+            const cogs = getVal('cogs', pIdx);
+            const gm = rev - cogs;
+            store['gm'] = store['gm'] || []; store['gm'][pIdx] = gm;
+
+            const opexSum = calculateSectionSum(isStructure, 'ebitda', pIdx);
+            const ebitda = gm - opexSum;
+            store['ebitda'] = store['ebitda'] || []; store['ebitda'][pIdx] = ebitda;
+
+            const depSum = calculateSectionSum(isStructure, 'ebit', pIdx);
+            const ebit = ebitda - depSum;
+            store['ebit'] = store['ebit'] || []; store['ebit'][pIdx] = ebit;
+
+            const intSum = calculateSectionSum(isStructure, 'ebt', pIdx);
+            const ebt = ebit - intSum;
+            store['ebt'] = store['ebt'] || []; store['ebt'][pIdx] = ebt;
+
+            const taxSum = calculateSectionSum(isStructure, 'ni', pIdx);
+            const ni = ebt - taxSum;
+            store['ni'] = store['ni'] || []; store['ni'][pIdx] = ni;
+
+            const div = getVal('div', pIdx);
+            const re_add = ni - div;
+            store['re_add'] = store['re_add'] || []; store['re_add'][pIdx] = re_add;
+
+            // --- 2. BALANCE SHEET ---
+            const caSum = calculateSectionSum(bsStructure, 'tca', pIdx);
+            const ncaSum = calculateSectionSum(bsStructure, 'tnca', pIdx);
+            const clSum = calculateSectionSum(bsStructure, 'tcl', pIdx);
+            const nclSum = calculateSectionSum(bsStructure, 'tncl', pIdx);
+            const eqSum = calculateSectionSum(bsStructure, 'total_equity', pIdx);
+
+            store['tca'] = store['tca'] || []; store['tca'][pIdx] = caSum;
+            store['tnca'] = store['tnca'] || []; store['tnca'][pIdx] = ncaSum;
+            const total_assets = caSum + ncaSum;
+            store['total_assets'] = store['total_assets'] || []; store['total_assets'][pIdx] = total_assets;
+
+            store['tcl'] = store['tcl'] || []; store['tcl'][pIdx] = clSum;
+            store['tncl'] = store['tncl'] || []; store['tncl'][pIdx] = nclSum;
+            const total_liab = clSum + nclSum;
+            store['total_liab'] = store['total_liab'] || []; store['total_liab'][pIdx] = total_liab;
+
+            store['total_equity'] = store['total_equity'] || []; store['total_equity'][pIdx] = eqSum;
+            const total_le = total_liab + eqSum;
+            store['total_le'] = store['total_le'] || []; store['total_le'][pIdx] = total_le;
+
+            // --- 3. CASH FLOW STATEMENT ---
+            const cfOpSum = calculateSectionSum(cfStructure, 'nco', pIdx);
+            const cfInvSum = calculateSectionSum(cfStructure, 'nci', pIdx);
+            const cfFinSum = calculateSectionSum(cfStructure, 'ncf', pIdx);
+
+            store['nco'] = store['nco'] || []; store['nco'][pIdx] = cfOpSum;
+            store['nci'] = store['nci'] || []; store['nci'][pIdx] = cfInvSum;
+            store['ncf'] = store['ncf'] || []; store['ncf'][pIdx] = cfFinSum;
+            const net_change_cash = cfOpSum + cfInvSum + cfFinSum;
+            store['net_change_cash'] = store['net_change_cash'] || []; store['net_change_cash'][pIdx] = net_change_cash;
+        });
+
+        // --- UPDATE DISPLAYS ---
+        updateStatementDisplay('is', isStructure, (pIdx) => getVal('rev', pIdx));
+        updateStatementDisplay('bs', bsStructure, (pIdx) => getVal('total_assets', pIdx));
+        updateStatementDisplay('cf', cfStructure, (pIdx) => {
+            let totalInflow = 0;
+            cfStructure.forEach(item => {
+                if (item.type === 'input') {
+                    const v = getVal(item.id, pIdx);
+                    if (v > 0) totalInflow += v;
+                }
+            });
+            return totalInflow || 1;
+        });
+
+        // Balance Sheet Verification
+        const latestIdx = periods.length - 1;
+        const diff = getVal('total_assets', latestIdx) - getVal('total_le', latestIdx);
+        const checkDiv = document.getElementById('balance_check');
+        if (checkDiv) {
+            checkDiv.innerText = `Balance Check (${periods[latestIdx]} Assets - L&E): $${diff.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            checkDiv.style.color = (Math.abs(diff) < 0.01) ? "var(--success)" : "var(--error)";
+        }
+
+        if (document.getElementById('ratios-tab').classList.contains('active')) renderRatiosTab();
+        if (document.getElementById('cf-calc-tab').classList.contains('active')) renderCFCalcTab();
+    }
+
+    function updateStatementDisplay(type, structure, getBaseVal) {
+        structure.forEach(item => {
+            if (item.type !== 'section_title') {
+                updateRowCells(item.id, getBaseVal, item.type === 'calc');
+            }
+        });
+    }
+
+    function updateRowCells(id, getBaseVal, isCalc) {
+        periods.forEach((_, pIdx) => {
+            const val = getVal(id, pIdx);
+            
+            if (isCalc) {
+                const el = document.getElementById(`${id}_${pIdx}`);
+                if (el) el.innerText = val.toLocaleString();
+            }
+
+            const baseVal = getBaseVal(pIdx);
+            const percEl = document.getElementById(`${id}_p_${pIdx}`);
+            if (percEl) {
+                percEl.innerText = baseVal !== 0 ? ((val / baseVal) * 100).toFixed(1) + '%' : '-';
+            }
+
+            if (periods.length > 1) {
+                const horizEl = document.getElementById(`${id}_h_${pIdx}`);
+                if (horizEl) {
+                    if (pIdx === 0) {
+                        horizEl.innerText = 'Base';
+                    } else {
+                        const prevVal = getVal(id, pIdx - 1);
+                        if (prevVal !== 0) {
+                            const change = ((val - prevVal) / Math.abs(prevVal)) * 100;
+                            horizEl.innerText = (change >= 0 ? '+' : '') + change.toFixed(1) + '%';
+                            horizEl.style.color = change >= 0 ? '#28a745' : '#d9534f';
+                        } else {
+                            horizEl.innerText = '-';
+                            horizEl.style.color = '#555';
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // --- RATIOS TAB RENDER ENGINE ---
+    function renderRatiosTab() {
+        const thead = document.getElementById('ratios-thead');
+        const tbody = document.getElementById('ratios-tbody');
+
+        let hHtml = `<tr><th class="left-align col-account">Financial Ratio Metric</th>`;
+        periods.forEach(p => { hHtml += `<th style="width:140px;">${p}</th>`; });
+        hHtml += `</tr>`;
+        thead.innerHTML = hHtml;
+
+        const ratioCategories = [
+            {
+                category: 'Liquidity Ratios',
+                items: [
+                    { name: 'Current Ratio', calc: (p) => getVal('tcl', p) !== 0 ? getVal('tca', p) / getVal('tcl', p) : 0, fmt: 'num' },
+                    { name: 'Quick Ratio', calc: (p) => getVal('tcl', p) !== 0 ? (getVal('tca', p) - getVal('inv', p)) / getVal('tcl', p) : 0, fmt: 'num' },
+                    { name: 'Cash Ratio', calc: (p) => getVal('tcl', p) !== 0 ? getVal('cash', p) / getVal('tcl', p) : 0, fmt: 'num' }
+                ]
+            },
+            {
+                category: 'Asset Turnover / Efficiency Ratios',
+                items: [
+                    { name: 'Total Asset Turnover', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('rev', p) / getVal('total_assets', p) : 0, fmt: 'num' },
+                    { name: 'Inventory Turnover', calc: (p) => getVal('inv', p) !== 0 ? getVal('cogs', p) / getVal('inv', p) : 0, fmt: 'num' },
+                    { name: 'Receivables Turnover', calc: (p) => getVal('ar', p) !== 0 ? getVal('rev', p) / getVal('ar', p) : 0, fmt: 'num' }
+                ]
+            },
+            {
+                category: 'Financial Leverage Ratios',
+                items: [
+                    { name: 'Total Debt Ratio', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('total_liab', p) / getVal('total_assets', p) : 0, fmt: 'pct' },
+                    { name: 'Debt-Equity Ratio', calc: (p) => getVal('total_equity', p) !== 0 ? getVal('total_liab', p) / getVal('total_equity', p) : 0, fmt: 'num' },
+                    { name: 'Equity Multiplier', calc: (p) => getVal('total_equity', p) !== 0 ? getVal('total_assets', p) / getVal('total_equity', p) : 0, fmt: 'num' }
+                ]
+            },
+            {
+                category: 'Coverage Ratios',
+                items: [
+                    { name: 'Times Interest Earned', calc: (p) => getVal('int', p) !== 0 ? getVal('ebit', p) / getVal('int', p) : 0, fmt: 'num' },
+                    { name: 'Cash Coverage Ratio', calc: (p) => getVal('int', p) !== 0 ? getVal('ebitda', p) / getVal('int', p) : 0, fmt: 'num' }
+                ]
+            },
+            {
+                category: 'Profitability Ratios',
+                items: [
+                    { name: 'Profit Margin', calc: (p) => getVal('rev', p) !== 0 ? getVal('ni', p) / getVal('rev', p) : 0, fmt: 'pct' },
+                    { name: 'Return on Assets (ROA)', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('ni', p) / getVal('total_assets', p) : 0, fmt: 'pct' },
+                    { name: 'Return on Equity (ROE)', calc: (p) => getVal('total_equity', p) !== 0 ? getVal('ni', p) / getVal('total_equity', p) : 0, fmt: 'pct' }
+                ]
+            },
+            {
+                category: 'Growth & Retention Ratios',
+                items: [
+                    { name: 'Retention Ratio (b)', calc: (p) => getVal('ni', p) !== 0 ? getVal('re_add', p) / getVal('ni', p) : 0, fmt: 'pct' },
+                    { name: 'Internal Growth Rate (IGR)', calc: (p) => {
+                        const roa = getVal('total_assets', p) !== 0 ? getVal('ni', p) / getVal('total_assets', p) : 0;
+                        const b = getVal('ni', p) !== 0 ? getVal('re_add', p) / getVal('ni', p) : 0;
+                        return (roa * b) / (1 - (roa * b));
+                    }, fmt: 'pct' },
+                    { name: 'Sustainable Growth Rate (SGR)', calc: (p) => {
+                        const roe = getVal('total_equity', p) !== 0 ? getVal('ni', p) / getVal('total_equity', p) : 0;
+                        const b = getVal('ni', p) !== 0 ? getVal('re_add', p) / getVal('ni', p) : 0;
+                        return (roe * b) / (1 - (roe * b));
+                    }, fmt: 'pct' }
+                ]
+            }
+        ];
+
+        let bHtml = '';
+        ratioCategories.forEach(cat => {
+            bHtml += `<tr class="section-head"><td colspan="${1 + periods.length}">${cat.category}</td></tr>`;
+            cat.items.forEach(item => {
+                bHtml += `<tr><td class="col-account" style="padding-left:20px; font-weight:600; text-align:left;">${item.name}</td>`;
+                periods.forEach((_, pIdx) => {
+                    const val = item.calc(pIdx);
+                    let displayVal = 'N/A';
+                    if (!isNaN(val) && isFinite(val)) {
+                        displayVal = item.fmt === 'pct' ? (val * 100).toFixed(2) + '%' : val.toFixed(2);
+                    }
+                    bHtml += `<td style="text-align:right; font-weight:bold;">${displayVal}</td>`;
+                });
+                bHtml += `</tr>`;
+            });
+        });
+        tbody.innerHTML = bHtml;
+    }
+
+    // --- CASH FLOW CALCULATIONS TAB RENDER ENGINE ---
+    function renderCFCalcTab() {
+        const thead = document.getElementById('cf-calc-thead');
+        const tbody = document.getElementById('cf-calc-tbody');
+
+        let hHtml = `<tr><th class="left-align col-account">Cash Flow Calculation Line Item</th>`;
+        periods.forEach(p => { hHtml += `<th style="width:160px;">${p}</th>`; });
+        hHtml += `</tr>`;
+        thead.innerHTML = hHtml;
+
+        const cfItems = [
+            {
+                name: 'Operating Cash Flow (OCF)',
+                calc: (p) => getVal('ebit', p) + getVal('dep', p) - getVal('tax', p),
+                format: 'subtotal'
+            },
+            {
+                name: 'Capital Spending (Net CapEx)',
+                calc: (p) => {
+                    if (p === 0) return Math.abs(getVal('cf_capex', p)) || (getVal('ppe', p) + getVal('dep', p));
+                    return (getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p);
+                },
+                format: 'input'
+            },
+            {
+                name: 'Change in Net Working Capital (NWC)',
+                calc: (p) => {
+                    const nwcCurr = getVal('tca', p) - getVal('tcl', p);
+                    if (p === 0) return Math.abs(getVal('cf_wc', p)) || 0;
+                    const nwcPrev = getVal('tca', p - 1) - getVal('tcl', p - 1);
+                    return nwcCurr - nwcPrev;
+                },
+                format: 'input'
+            },
+            {
+                name: 'CASH FLOW FROM ASSETS (Free Cash Flow)',
+                calc: (p) => {
+                    const ocf = getVal('ebit', p) + getVal('dep', p) - getVal('tax', p);
+                    const capEx = p === 0 ? (Math.abs(getVal('cf_capex', p)) || (getVal('ppe', p) + getVal('dep', p))) : ((getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p));
+                    const nwcCurr = getVal('tca', p) - getVal('tcl', p);
+                    const nwcPrev = p === 0 ? (nwcCurr - (Math.abs(getVal('cf_wc', p)) || 0)) : (getVal('tca', p - 1) - getVal('tcl', p - 1));
+                    const changeNwc = nwcCurr - nwcPrev;
+                    return ocf - capEx - changeNwc;
+                },
+                format: 'total'
+            },
+            {
+                name: 'Cash Flow to Creditors',
+                calc: (p) => {
+                    if (p === 0) return getVal('int', p) - getVal('cf_debt', p);
+                    return getVal('int', p) - (getVal('ltd', p) - getVal('ltd', p - 1));
+                },
+                format: 'subtotal'
+            },
+            {
+                name: 'Cash Flow to Stockholders',
+                calc: (p) => {
+                    if (p === 0) return getVal('div', p);
+                    return getVal('div', p) - (getVal('cap', p) - getVal('cap', p - 1));
+                },
+                format: 'subtotal'
+            }
+        ];
+
+        let bHtml = '';
+        cfItems.forEach(item => {
+            const rowClass = item.format === 'total' ? 'total-row' : (item.format === 'subtotal' ? 'subtotal-row' : '');
+            bHtml += `<tr class="${rowClass}"><td class="col-account" style="padding-left:20px; font-weight:bold; text-align:left;">${item.name}</td>`;
+            periods.forEach((_, pIdx) => {
+                const val = item.calc(pIdx);
+                bHtml += `<td style="text-align:right; font-weight:bold;">$${val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>`;
+            });
+            bHtml += `</tr>`;
+        });
+        tbody.innerHTML = bHtml;
+
+        const latestIdx = periods.length - 1;
+        const cffa = cfItems[3].calc(latestIdx);
+        const cfCred = cfItems[4].calc(latestIdx);
+        const cfStock = cfItems[5].calc(latestIdx);
+        const diff = cffa - (cfCred + cfStock);
+
+        const checkDiv = document.getElementById('cf_identity_check');
+        if (checkDiv) {
+            checkDiv.innerText = `Cash Flow Identity Check (${periods[latestIdx]}: CFFA - [CF to Creditors + CF to Stockholders]): $${diff.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            checkDiv.style.color = (Math.abs(diff) < 0.01) ? "var(--success)" : "var(--error)";
+        }
+    }
+
+    // Initialize Application
+    window.onload = function() {
+        const loaded = loadFromLocalStorage();
+        if (!loaded) {
+            initDataStore();
+        }
+        renderAll();
+    };
+</script>
+
+</body>
+</html>
