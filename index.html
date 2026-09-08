@@ -14,6 +14,7 @@
             --success: #28a745;
             --subtotal-bg: #eef2f7;
             --section-head-bg: #eceff1;
+            --component-bg: #fdfdfd;
         }
 
         body {
@@ -25,7 +26,7 @@
         }
 
         .container {
-            max-width: 1350px;
+            max-width: 1380px;
             margin: 0 auto;
             background: white;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -177,9 +178,9 @@
 
         table.fin-table th.left-align {
             text-align: left;
-            width: 320px;
-            min-width: 320px;
-            max-width: 320px;
+            width: 360px;
+            min-width: 360px;
+            max-width: 360px;
         }
 
         table.fin-table td {
@@ -191,9 +192,9 @@
         }
 
         .col-account {
-            width: 320px;
-            min-width: 320px;
-            max-width: 320px;
+            width: 360px;
+            min-width: 360px;
+            max-width: 360px;
             text-align: left;
         }
 
@@ -317,6 +318,17 @@
 
         .total-row .calc-value, .total-row .perc-value {
             color: white;
+        }
+
+        .component-row {
+            background-color: var(--component-bg);
+            font-size: 0.88rem;
+            color: #495057;
+        }
+
+        .component-row td.col-account {
+            padding-left: 32px !important;
+            font-style: italic;
         }
 
         .btn-remove-row {
@@ -500,7 +512,7 @@
     <!-- ==================== RATIOS TAB ==================== -->
     <div id="ratios-tab" class="tab-content">
         <div class="toolbar">
-            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Comparative Financial Ratio Analysis Across All Periods</span>
+            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Comparative Financial Ratio Analysis & DuPont Identity Across All Periods</span>
             <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
         </div>
         <div class="table-wrapper">
@@ -514,7 +526,7 @@
     <!-- ==================== CASH FLOWS CALCULATIONS TAB ==================== -->
     <div id="cf-calc-tab" class="tab-content">
         <div class="toolbar">
-            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Corporate Finance Cash Flow Metrics (Free Cash Flow Identity)</span>
+            <span style="font-size: 0.95rem; color: #333; font-weight: bold; margin-right: auto;">Corporate Finance Cash Flow Metrics & Component Breakdown (Free Cash Flow Identity)</span>
             <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
         </div>
         <div class="table-wrapper">
@@ -573,17 +585,11 @@
         </div>
 
         <div class="formula-section">
-            <h3>4. Liquidity Ratios</h3>
+            <h3>4. Liquidity & Efficiency Ratios</h3>
             <ul>
                 <li><strong>Current Ratio:</strong> Total Current Assets ÷ Total Current Liabilities</li>
                 <li><strong>Quick Ratio (Acid-Test):</strong> (Total Current Assets − Inventory) ÷ Total Current Liabilities</li>
                 <li><strong>Cash Ratio:</strong> Cash & Cash Equivalents ÷ Total Current Liabilities</li>
-            </ul>
-        </div>
-
-        <div class="formula-section">
-            <h3>5. Asset Turnover / Efficiency Ratios</h3>
-            <ul>
                 <li><strong>Total Asset Turnover:</strong> Sales Revenues ÷ Total Assets</li>
                 <li><strong>Inventory Turnover:</strong> Cost of Goods Sold (COGS) ÷ Inventory</li>
                 <li><strong>Receivables Turnover:</strong> Sales Revenues ÷ Accounts Receivable</li>
@@ -591,22 +597,23 @@
         </div>
 
         <div class="formula-section">
-            <h3>6. Financial Leverage & Coverage Ratios</h3>
+            <h3>5. DuPont Framework Breakdown</h3>
             <ul>
-                <li><strong>Total Debt Ratio:</strong> Total Liabilities ÷ Total Assets</li>
-                <li><strong>Debt-to-Equity (D/E) Ratio:</strong> Total Liabilities ÷ Total Equity</li>
+                <li><strong>Profit Margin:</strong> Net Income ÷ Sales Revenues</li>
+                <li><strong>Asset Turnover:</strong> Sales Revenues ÷ Total Assets</li>
                 <li><strong>Equity Multiplier:</strong> Total Assets ÷ Total Equity</li>
-                <li><strong>Times Interest Earned (TIE):</strong> EBIT ÷ Interest Expenses</li>
-                <li><strong>Cash Coverage Ratio:</strong> EBITDA ÷ Interest Expenses</li>
+                <li><strong>ROA (2-Step DuPont):</strong> Profit Margin × Asset Turnover</li>
+                <li><strong>ROE (3-Step DuPont):</strong> Profit Margin × Asset Turnover × Equity Multiplier (or ROA × Equity Multiplier)</li>
             </ul>
         </div>
 
         <div class="formula-section">
-            <h3>7. Profitability & Growth Ratios</h3>
+            <h3>6. Leverage, Coverage & Growth Ratios</h3>
             <ul>
-                <li><strong>Profit Margin:</strong> Net Income ÷ Sales Revenues</li>
-                <li><strong>Return on Assets (ROA):</strong> Net Income ÷ Total Assets</li>
-                <li><strong>Return on Equity (ROE):</strong> Net Income ÷ Total Equity</li>
+                <li><strong>Total Debt Ratio:</strong> Total Liabilities ÷ Total Assets</li>
+                <li><strong>Debt-to-Equity (D/E) Ratio:</strong> Total Liabilities ÷ Total Equity</li>
+                <li><strong>Times Interest Earned (TIE):</strong> EBIT ÷ Interest Expenses</li>
+                <li><strong>Cash Coverage Ratio:</strong> EBITDA ÷ Interest Expenses</li>
                 <li><strong>Retention Ratio (b):</strong> Addition to Retained Earnings ÷ Net Income</li>
                 <li><strong>Internal Growth Rate (IGR):</strong> (ROA × b) ÷ (1 − [ROA × b])</li>
                 <li><strong>Sustainable Growth Rate (SGR):</strong> (ROE × b) ÷ (1 − [ROE × b])</li>
@@ -614,7 +621,7 @@
         </div>
 
         <div class="formula-section">
-            <h3>8. Corporate Finance Cash Flows (Free Cash Flow Identity)</h3>
+            <h3>7. Corporate Finance Cash Flows (Free Cash Flow Identity)</h3>
             <ul>
                 <li><strong>Operating Cash Flow (OCF):</strong> EBIT + Depreciation & Amortization − Taxes</li>
                 <li><strong>Capital Spending (Net CapEx):</strong> Ending Net Fixed Assets − Beginning Net Fixed Assets + Depreciation</li>
@@ -636,7 +643,7 @@
 
 <script>
     // LocalStorage Key Name
-    const STORAGE_KEY = 'financial_suite_data_v2';
+    const STORAGE_KEY = 'financial_suite_data_v3';
 
     // System Global Data Model
     let periods = ['Year 1', 'Year 2'];
@@ -730,6 +737,24 @@
         allKeys.forEach(key => {
             store[key] = new Array(periods.length).fill(0);
         });
+    }
+
+    // --- NUMBER FORMATTING HELPERS ---
+    function formatNumber(num, decimals = 0) {
+        if (num === null || num === undefined || isNaN(num)) return "0";
+        return num.toLocaleString(undefined, {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    }
+
+    function parseFormattedNumber(valStr) {
+        if (typeof valStr === 'number') return valStr;
+        if (!valStr) return 0;
+        // Remove commas and spaces
+        const cleaned = valStr.toString().replace(/,/g, '').trim();
+        const parsed = parseFloat(cleaned);
+        return isNaN(parsed) ? 0 : parsed;
     }
 
     // --- LOCAL STORAGE PERSISTENCE ENGINE ---
@@ -855,11 +880,29 @@
         return 0;
     }
 
-    function setVal(id, pIdx, val) {
+    function setVal(id, pIdx, rawValue) {
         if (!store[id]) store[id] = new Array(periods.length).fill(0);
-        store[id][pIdx] = val === "" ? "" : (parseFloat(val) || 0);
+        const numVal = parseFormattedNumber(rawValue);
+        store[id][pIdx] = numVal;
+        
+        // Dynamic re-formatting on the active input element
+        const inputEl = document.getElementById(`${id}_${pIdx}`);
+        if (inputEl && document.activeElement !== inputEl) {
+            inputEl.value = numVal !== 0 ? formatNumber(numVal) : "";
+        }
+
         recalculateAndRefresh();
         saveToLocalStorage();
+    }
+
+    function handleInputBlur(inputEl, id, pIdx) {
+        const val = getVal(id, pIdx);
+        inputEl.value = val !== 0 ? formatNumber(val) : "";
+    }
+
+    function handleInputFocus(inputEl, id, pIdx) {
+        const val = getVal(id, pIdx);
+        inputEl.value = val !== 0 ? val : "";
     }
 
     function updateCustomLabel(statementType, rowId, label) {
@@ -979,8 +1022,13 @@
                         bHtml += `<td class="col-amount"><span class="calc-value" id="${item.id}_${pIdx}">0</span></td>`;
                     } else {
                         const val = store[item.id] && store[item.id][pIdx] !== undefined ? store[item.id][pIdx] : "";
-                        const valAttr = val === 0 ? 'placeholder="0"' : `value="${val}"`;
-                        bHtml += `<td class="col-amount"><input type="number" class="currency-input" id="${item.id}_${pIdx}" ${valAttr} oninput="setVal('${item.id}', ${pIdx}, this.value)"></td>`;
+                        const formattedVal = val !== "" && val !== 0 ? formatNumber(val) : "";
+                        bHtml += `<td class="col-amount">
+                            <input type="text" class="currency-input" id="${item.id}_${pIdx}" value="${formattedVal}" placeholder="0" 
+                                oninput="setVal('${item.id}', ${pIdx}, this.value)" 
+                                onblur="handleInputBlur(this, '${item.id}', ${pIdx})" 
+                                onfocus="handleInputFocus(this, '${item.id}', ${pIdx})">
+                        </td>`;
                     }
                     bHtml += `<td class="col-vert"><span class="perc-value" id="${item.id}_p_${pIdx}">-</span></td>`;
                     if (periods.length > 1) bHtml += `<td class="col-horiz"><span class="perc-value" id="${item.id}_h_${pIdx}">-</span></td>`;
@@ -1095,7 +1143,7 @@
         const diff = getVal('total_assets', latestIdx) - getVal('total_le', latestIdx);
         const checkDiv = document.getElementById('balance_check');
         if (checkDiv) {
-            checkDiv.innerText = `Balance Check (${periods[latestIdx]} Assets - L&E): $${diff.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            checkDiv.innerText = `Balance Check (${periods[latestIdx]} Assets - L&E): $${formatNumber(diff, 2)}`;
             checkDiv.style.color = (Math.abs(diff) < 0.01) ? "var(--success)" : "var(--error)";
         }
 
@@ -1117,7 +1165,7 @@
             
             if (isCalc) {
                 const el = document.getElementById(`${id}_${pIdx}`);
-                if (el) el.innerText = val.toLocaleString();
+                if (el) el.innerText = formatNumber(val);
             }
 
             const baseVal = getBaseVal(pIdx);
@@ -1147,7 +1195,7 @@
         });
     }
 
-    // --- RATIOS TAB RENDER ENGINE ---
+    // --- RATIOS TAB RENDER ENGINE WITH DUPONT ANALYSIS ---
     function renderRatiosTab() {
         const thead = document.getElementById('ratios-thead');
         const tbody = document.getElementById('ratios-tbody');
@@ -1175,6 +1223,16 @@
                 ]
             },
             {
+                category: 'DuPont Analysis Framework (ROE Breakdown)',
+                items: [
+                    { name: 'Profit Margin (Net Income / Sales)', calc: (p) => getVal('rev', p) !== 0 ? getVal('ni', p) / getVal('rev', p) : 0, fmt: 'pct' },
+                    { name: '× Total Asset Turnover (Sales / Total Assets)', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('rev', p) / getVal('total_assets', p) : 0, fmt: 'num' },
+                    { name: '= Return on Assets (ROA)', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('ni', p) / getVal('total_assets', p) : 0, fmt: 'pct' },
+                    { name: '× Equity Multiplier (Total Assets / Total Equity)', calc: (p) => getVal('total_equity', p) !== 0 ? getVal('total_assets', p) / getVal('total_equity', p) : 0, fmt: 'num' },
+                    { name: '= Return on Equity (ROE - DuPont 3-Step)', calc: (p) => getVal('total_equity', p) !== 0 ? getVal('ni', p) / getVal('total_equity', p) : 0, fmt: 'pct' }
+                ]
+            },
+            {
                 category: 'Financial Leverage Ratios',
                 items: [
                     { name: 'Total Debt Ratio', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('total_liab', p) / getVal('total_assets', p) : 0, fmt: 'pct' },
@@ -1187,14 +1245,6 @@
                 items: [
                     { name: 'Times Interest Earned', calc: (p) => getVal('int', p) !== 0 ? getVal('ebit', p) / getVal('int', p) : 0, fmt: 'num' },
                     { name: 'Cash Coverage Ratio', calc: (p) => getVal('int', p) !== 0 ? getVal('ebitda', p) / getVal('int', p) : 0, fmt: 'num' }
-                ]
-            },
-            {
-                category: 'Profitability Ratios',
-                items: [
-                    { name: 'Profit Margin', calc: (p) => getVal('rev', p) !== 0 ? getVal('ni', p) / getVal('rev', p) : 0, fmt: 'pct' },
-                    { name: 'Return on Assets (ROA)', calc: (p) => getVal('total_assets', p) !== 0 ? getVal('ni', p) / getVal('total_assets', p) : 0, fmt: 'pct' },
-                    { name: 'Return on Equity (ROE)', calc: (p) => getVal('total_equity', p) !== 0 ? getVal('ni', p) / getVal('total_equity', p) : 0, fmt: 'pct' }
                 ]
             },
             {
@@ -1219,7 +1269,9 @@
         ratioCategories.forEach(cat => {
             bHtml += `<tr class="section-head"><td colspan="${1 + periods.length}">${cat.category}</td></tr>`;
             cat.items.forEach(item => {
-                bHtml += `<tr><td class="col-account" style="padding-left:20px; font-weight:600; text-align:left;">${item.name}</td>`;
+                const isDuPontTotal = item.name.includes('= Return on Equity');
+                const rowStyle = isDuPontTotal ? 'background-color: var(--subtotal-bg); font-weight: bold;' : '';
+                bHtml += `<tr style="${rowStyle}"><td class="col-account" style="padding-left:20px; font-weight:600; text-align:left;">${item.name}</td>`;
                 periods.forEach((_, pIdx) => {
                     const val = item.calc(pIdx);
                     let displayVal = 'N/A';
@@ -1234,91 +1286,154 @@
         tbody.innerHTML = bHtml;
     }
 
-    // --- CASH FLOW CALCULATIONS TAB RENDER ENGINE ---
+    // --- CASH FLOW CALCULATIONS TAB RENDER ENGINE WITH STRUCTURED COMPONENTS & SINGLE-YEAR ASSUMPTIONS ---
     function renderCFCalcTab() {
         const thead = document.getElementById('cf-calc-thead');
         const tbody = document.getElementById('cf-calc-tbody');
 
-        let hHtml = `<tr><th class="left-align col-account">Cash Flow Calculation Line Item</th>`;
+        let hHtml = `<tr><th class="left-align col-account">Cash Flow Calculation & Components</th>`;
         periods.forEach(p => { hHtml += `<th style="width:160px;">${p}</th>`; });
         hHtml += `</tr>`;
         thead.innerHTML = hHtml;
 
-        const cfItems = [
+        // Structured Breakdown Array
+        const cfSections = [
             {
-                name: 'Operating Cash Flow (OCF)',
-                calc: (p) => getVal('ebit', p) + getVal('dep', p) - getVal('tax', p),
-                format: 'subtotal'
+                title: 'OPERATING CASH FLOW (OCF)',
+                format: 'subtotal',
+                calcTotal: (p) => getVal('ebit', p) + getVal('dep', p) - getVal('tax', p),
+                components: [
+                    { name: 'EBIT (Operating Income)', calc: (p) => getVal('ebit', p) },
+                    { name: 'Depreciation & Amortization (+)', calc: (p) => getVal('dep', p) },
+                    { name: 'Taxes (-)', calc: (p) => -getVal('tax', p) }
+                ]
             },
             {
-                name: 'Capital Spending (Net CapEx)',
-                calc: (p) => {
-                    if (p === 0) return Math.abs(getVal('cf_capex', p)) || (getVal('ppe', p) + getVal('dep', p));
+                title: 'CAPITAL SPENDING (NET CAPEX)',
+                format: 'subtotal',
+                calcTotal: (p) => {
+                    if (p === 0) {
+                        // First year / Single year assumption: prior Net Fixed Assets = 0
+                        return getVal('ppe', p) + getVal('dep', p);
+                    }
                     return (getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p);
                 },
-                format: 'input'
+                components: [
+                    { name: 'Ending Net Fixed Assets (PPE)', calc: (p) => getVal('ppe', p) },
+                    { name: 'Beginning Net Fixed Assets (PPE)', calc: (p) => p === 0 ? 0 : getVal('ppe', p - 1) },
+                    { name: 'Depreciation & Amortization (+)', calc: (p) => getVal('dep', p) }
+                ]
             },
             {
-                name: 'Change in Net Working Capital (NWC)',
-                calc: (p) => {
+                title: 'CHANGE IN NET WORKING CAPITAL (NWC)',
+                format: 'subtotal',
+                calcTotal: (p) => {
                     const nwcCurr = getVal('tca', p) - getVal('tcl', p);
-                    if (p === 0) return Math.abs(getVal('cf_wc', p)) || 0;
+                    if (p === 0) {
+                        // First year assumption: prior NWC = 0, current NWC is change
+                        return nwcCurr;
+                    }
                     const nwcPrev = getVal('tca', p - 1) - getVal('tcl', p - 1);
                     return nwcCurr - nwcPrev;
                 },
-                format: 'input'
+                components: [
+                    { name: 'Ending Current Assets', calc: (p) => getVal('tca', p) },
+                    { name: 'Ending Current Liabilities (-)', calc: (p) => getVal('tcl', p) },
+                    { name: 'Ending NWC (Current Assets - Current Liabilities)', calc: (p) => getVal('tca', p) - getVal('tcl', p) },
+                    { name: 'Beginning NWC (Prior Year Assets - Liabilities)', calc: (p) => p === 0 ? 0 : (getVal('tca', p - 1) - getVal('tcl', p - 1)) }
+                ]
             },
             {
-                name: 'CASH FLOW FROM ASSETS (Free Cash Flow)',
-                calc: (p) => {
+                title: 'CASH FLOW FROM ASSETS (CFFA / Free Cash Flow)',
+                format: 'total',
+                calcTotal: (p) => {
                     const ocf = getVal('ebit', p) + getVal('dep', p) - getVal('tax', p);
-                    const capEx = p === 0 ? (Math.abs(getVal('cf_capex', p)) || (getVal('ppe', p) + getVal('dep', p))) : ((getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p));
+                    const capEx = p === 0 ? (getVal('ppe', p) + getVal('dep', p)) : ((getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p));
                     const nwcCurr = getVal('tca', p) - getVal('tcl', p);
-                    const nwcPrev = p === 0 ? (nwcCurr - (Math.abs(getVal('cf_wc', p)) || 0)) : (getVal('tca', p - 1) - getVal('tcl', p - 1));
+                    const nwcPrev = p === 0 ? 0 : (getVal('tca', p - 1) - getVal('tcl', p - 1));
                     const changeNwc = nwcCurr - nwcPrev;
                     return ocf - capEx - changeNwc;
                 },
-                format: 'total'
+                components: [
+                    { name: 'Operating Cash Flow (OCF) (+)', calc: (p) => getVal('ebit', p) + getVal('dep', p) - getVal('tax', p) },
+                    { name: 'Capital Spending (Net CapEx) (-)', calc: (p) => -(p === 0 ? (getVal('ppe', p) + getVal('dep', p)) : ((getVal('ppe', p) - getVal('ppe', p - 1)) + getVal('dep', p))) },
+                    { name: 'Change in Net Working Capital (-)', calc: (p) => {
+                        const nwcCurr = getVal('tca', p) - getVal('tcl', p);
+                        const nwcPrev = p === 0 ? 0 : (getVal('tca', p - 1) - getVal('tcl', p - 1));
+                        return -(nwcCurr - nwcPrev);
+                    }}
+                ]
             },
             {
-                name: 'Cash Flow to Creditors',
-                calc: (p) => {
-                    if (p === 0) return getVal('int', p) - getVal('cf_debt', p);
+                title: 'CASH FLOW TO CREDITORS',
+                format: 'subtotal',
+                calcTotal: (p) => {
+                    if (p === 0) {
+                        // First year assumption: prior LTD = 0, current LTD is net new borrowing
+                        return getVal('int', p) - getVal('ltd', p);
+                    }
                     return getVal('int', p) - (getVal('ltd', p) - getVal('ltd', p - 1));
                 },
-                format: 'subtotal'
+                components: [
+                    { name: 'Interest Expenses (+)', calc: (p) => getVal('int', p) },
+                    { name: 'Ending Long-Term Debt', calc: (p) => getVal('ltd', p) },
+                    { name: 'Beginning Long-Term Debt', calc: (p) => p === 0 ? 0 : getVal('ltd', p - 1) },
+                    { name: 'Net New Long-Term Borrowing (-)', calc: (p) => -(p === 0 ? getVal('ltd', p) : (getVal('ltd', p) - getVal('ltd', p - 1))) }
+                ]
             },
             {
-                name: 'Cash Flow to Stockholders',
-                calc: (p) => {
-                    if (p === 0) return getVal('div', p);
+                title: 'CASH FLOW TO STOCKHOLDERS',
+                format: 'subtotal',
+                calcTotal: (p) => {
+                    if (p === 0) {
+                        // First year assumption: prior Common Stock = 0, current stock is net equity raised
+                        return getVal('div', p) - getVal('cap', p);
+                    }
                     return getVal('div', p) - (getVal('cap', p) - getVal('cap', p - 1));
                 },
-                format: 'subtotal'
+                components: [
+                    { name: 'Dividends Paid (+)', calc: (p) => getVal('div', p) },
+                    { name: 'Ending Share Capital / Common Stock', calc: (p) => getVal('cap', p) },
+                    { name: 'Beginning Share Capital / Common Stock', calc: (p) => p === 0 ? 0 : getVal('cap', p - 1) },
+                    { name: 'Net New Equity Raised (-)', calc: (p) => -(p === 0 ? getVal('cap', p) : (getVal('cap', p) - getVal('cap', p - 1))) }
+                ]
             }
         ];
 
         let bHtml = '';
-        cfItems.forEach(item => {
-            const rowClass = item.format === 'total' ? 'total-row' : (item.format === 'subtotal' ? 'subtotal-row' : '');
-            bHtml += `<tr class="${rowClass}"><td class="col-account" style="padding-left:20px; font-weight:bold; text-align:left;">${item.name}</td>`;
+        cfSections.forEach(sec => {
+            // Render Primary Cash Flow Line
+            const rowClass = sec.format === 'total' ? 'total-row' : 'subtotal-row';
+            bHtml += `<tr class="${rowClass}"><td class="col-account" style="padding-left:15px; font-weight:bold; text-align:left;">${sec.title}</td>`;
             periods.forEach((_, pIdx) => {
-                const val = item.calc(pIdx);
-                bHtml += `<td style="text-align:right; font-weight:bold;">$${val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>`;
+                const totalVal = sec.calcTotal(pIdx);
+                bHtml += `<td style="text-align:right; font-weight:bold;">$${formatNumber(totalVal, 2)}</td>`;
             });
             bHtml += `</tr>`;
+
+            // Render Underline Component Breakdown
+            sec.components.forEach(comp => {
+                bHtml += `<tr class="component-row"><td class="col-account">${comp.name}</td>`;
+                periods.forEach((_, pIdx) => {
+                    const compVal = comp.calc(pIdx);
+                    bHtml += `<td style="text-align:right;">$${formatNumber(compVal, 2)}</td>`;
+                });
+                bHtml += `</tr>`;
+            });
         });
+
         tbody.innerHTML = bHtml;
 
+        // Identity Verification
         const latestIdx = periods.length - 1;
-        const cffa = cfItems[3].calc(latestIdx);
-        const cfCred = cfItems[4].calc(latestIdx);
-        const cfStock = cfItems[5].calc(latestIdx);
+        const cffa = cfSections[3].calcTotal(latestIdx);
+        const cfCred = cfSections[4].calcTotal(latestIdx);
+        const cfStock = cfSections[5].calcTotal(latestIdx);
         const diff = cffa - (cfCred + cfStock);
 
         const checkDiv = document.getElementById('cf_identity_check');
         if (checkDiv) {
-            checkDiv.innerText = `Cash Flow Identity Check (${periods[latestIdx]}: CFFA - [CF to Creditors + CF to Stockholders]): $${diff.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            checkDiv.innerText = `Cash Flow Identity Check (${periods[latestIdx]}: CFFA - [CF to Creditors + CF to Stockholders]): $${formatNumber(diff, 2)}`;
             checkDiv.style.color = (Math.abs(diff) < 0.01) ? "var(--success)" : "var(--error)";
         }
     }
